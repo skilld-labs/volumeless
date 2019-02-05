@@ -2,7 +2,6 @@ FROM percona:5.7
 
 USER root
 RUN /usr/bin/install -m 0775 -o mysql -g root -d /data &&\
-  find /etc/percona-server.conf.d/ -name '*.cnf' -print0 \
-    | xargs -0 grep -lZE '^(datadir)' \
-    | xargs -rt -0 sed -Ei 's/(datadir\s*=\s*)(\S*)$/\1\/data/'
+  sed -Ei 's/(datadir\s*=\s*)(\S*)$/\1\/data/' /etc/percona-server.conf.d/mysqld.cnf &&\
+  echo 'max_allowed_packet = 4096M' >> /etc/percona-server.conf.d/mysqld.cnf
 USER mysql
